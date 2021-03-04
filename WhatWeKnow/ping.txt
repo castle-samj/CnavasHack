@@ -1,0 +1,2 @@
+ ~ ping learn.vccs.edu
+PING canvas-vanity-vccs-1390427535.us-east-1.elb.amazonaws.com
