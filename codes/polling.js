@@ -11,7 +11,6 @@ const polling = (() => {
   let newStatus;
 
   //opens the csv file with domain info and calls checkStatus() to check each row.
-
   fs.createReadStream('data.csv')
     .pipe(csv())
     .on('data', (row) => {
