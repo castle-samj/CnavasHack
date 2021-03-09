@@ -1,10 +1,11 @@
 'use strict'
 /**
  * Opens a headless browser, navigates to url, and fetches http status code from domain. 
- * @param {string} url Fully qualified domain url : "http://www.example.com"
- * @param {function} logic Function to evaluate inside browser context. 
- * @param {boolean} isAuthRequired Set true if there is a login redirect.
- * @param {object} auth { '#usernameID': 'username', '#passwordID': 'password' } The keys of this object are the html tag ids for the username and password fields of the login page. 
+ * @async
+ * @param {string} url - Fully qualified domain url : "http://www.example.com"
+ * @param {function} [logic] - Callback function to evaluate inside browser context (optional)
+ * @param {boolean} [isAuthRequired] - Set true if there is a login redirect (optional)
+ * @param {{'usernameHtmlTagID':'username', 'passwordHtmlTagID':'password'}} [auth] - The keys of this object are the html tag ids for the username and password fields of the login page (optional) 
  * @returns {number} The http status code from domain of url passed in.
  */
 const scrape = async (url, logic, isAuthRequired, auth) => {
