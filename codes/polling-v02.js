@@ -18,11 +18,11 @@ const polling = (() => {
 
   /**
    * Uses the response.ok value from a http get response, along with past status values from the db to determine if a status change has occurred. If a change has occurred will call msg.send(), update statusChange flags, and push new status to the newData array.
-   * @param {*} domainUrl  
-   * @param {*} username 
-   * @param {*} avatar_url 
-   * @param {*} status String. Status from db i.e last known status before current get request. Up or Down.
-   * @param {*} resVal Bool. True if http get response status code is 200, else false.   
+   * @param {string} domainUrl  
+   * @param {string} username 
+   * @param {string} avatar_url 
+   * @param {string} status Status from db i.e last known status before current get request. Up or Down.
+   * @param {boolean} resVal True if http get response status code is 200.   
    */
   const checkStatus = (domainUrl, username, avatar_url, status, resVal) => {
     let currentStatus = status;
@@ -46,7 +46,8 @@ const polling = (() => {
 
   /**
    * Calls csv-writer and creates/overwrites a csv file with the input array data.
-   * @param {*} arrOfDataObj Array. An array of csv objects.
+   * @param {object[]} arrOfDataObj An array of csv objects.
+   * @example [{"domain": "http://www.example.com", "name": "Example"},{"domain": "http://www.google.com", "name": "Google"}]
    */
   const updateDB = (arrOfDataObj) => {
     const csvWriter = createCsvWriter({
