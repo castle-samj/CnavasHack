@@ -1,7 +1,7 @@
 'use strict'
 /**
  * Opens a headless browser, navigates to url, and fetches http status code from domain. 
- * @param {string} url Fully qualified domain url : "http://www.exsample.com"
+ * @param {string} url Fully qualified domain url : "http://www.example.com"
  * @param {function} logic Function to evaluate inside browser context. 
  * @param {boolean} isAuthRequired Set true if there is a login redirect.
  * @param {object} auth { '#usernameID': 'username', '#passwordID': 'password' } The keys of this object are the html tag ids for the username and password fields of the login page. 
