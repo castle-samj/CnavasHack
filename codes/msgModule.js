@@ -1,14 +1,12 @@
 /**
  * 
- * @param {*} urlString String url of the webhook to send post to. Required
- * @param {*} content String content of the post msg. Required
- * @param {*} username Display name of the discord bot that sent the msg to channel. Optional
- * @param {*} avatar_url url link to display img of discord bot. Optional
+ * @param {string} urlString String url of the webhook to send post to.
+ * @param {string} content String content of the post msg.
+ * @param {string} [username] Display name of the discord bot that sent the msg to channel. Optional
+ * @param {string} [avatar_url] url link to display img of discord bot. Optional
  */
 const msgModule = (urlString, content, username, avatar_url) => {
-  //npm install node-fetch
   const fetch = require('node-fetch');
-  //npm install fs
   const fs = require('fs');
   let _whurl = "";
   const _msg = {};
