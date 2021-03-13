@@ -22,10 +22,12 @@ const scrape = async (url, logic, isAuthRequired, auth, checkFailedLogin) => {
 
   let failed;
 
-  await page.goto(url,{timeout: 3000}).catch((err)=>{
-    failed = true;
-    console.log(err.toString());
-  });
+  await page.goto(url,{timeout: 3000})
+    .then(res => console.log(`Init navigation status: ${res.status()}`))
+    .catch((err)=>{
+      failed = true;
+      console.log(err.toString());
+    });
 
   if(failed){
     browser.close()
@@ -44,6 +46,7 @@ const scrape = async (url, logic, isAuthRequired, auth, checkFailedLogin) => {
       await page.waitForTimeout(2000);
       const currentUrl = await page.evaluate(() => window.location.href);
       if (currentUrl != url) {
+        console.log(`url during login check: ${currentUrl}`);
         browser.close();
         return `Login Failed for ${url}`
       }
