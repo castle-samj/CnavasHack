@@ -1,37 +1,42 @@
 /**
- * 
- * @param {string} urlString String url of the webhook to send post to.
- * @param {string} content String content of the post msg.
- * @param {string} [username] Display name of the discord bot that sent the msg to channel. Optional
- * @param {string} [avatar_url] url link to display img of discord bot. Optional
+ * Posts a msg to a discord webhook. 
+ * @param {string} urlString url of the webhook to post.
+ * @param {string} content Content of the post msg.
+ * @param {string} [username] Display name of the discord bot that sent the msg to channel (optional)
+ * @param {string} [avatar_url] url link to display img of discord bot (optional)
+ * @returns {boolean} True if msg was sent.
  */
-const msgModule = (urlString, content, username, avatar_url) => {
+const msgModule = async (urlString, content, username, avatar_url) => {
+  const AbortController = require('abort-controller');
   const fetch = require('node-fetch');
   const fs = require('fs');
-  let _whurl = "";
-  const _msg = {};
-  
-  const sendMsg = () => {
-    _whurl = urlString;
-    _msg.content = content;
-    if(username) _msg.username = username;
-    if(avatar_url) _msg.avatar_url = avatar_url;
-    
-    //Creates a promise, POSTS msg and waits for the result from discord server. Appends the result to msg.log  
-    fetch(_whurl + "?wait=true", {"method":"POST", "headers":{"content-type": "application/json"},"body": JSON.stringify(_msg)})
-      .then(res => res.json())
-      .then(json => {
-        const stream = fs.createWriteStream('./msg.log', {flags: 'a'});
-        for(let key in json) {
-          stream.write(`${key}: ${JSON.stringify(json[key], null, 2)}\n`);
-        }
-        stream.write('\n\n');
-        });
-      
-  }
+  const stream = fs.createWriteStream('./msg.log', { flags: 'a' });
+  const msg = {};
+  let wasMsgSent = false;
+  let whurl = urlString;
+  msg.content = content;
 
-  sendMsg();
+  if (username) msg.username = username;
+  if (avatar_url) msg.avatar_url = avatar_url;
 
-};
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), 5000);
+
+  //POSTS msg and appends the result to msg.log  
+  await fetch(whurl + "?wait=true", { signal: controller.signal, "method": "POST", "headers": { "content-type": "application/json" }, "body": JSON.stringify(msg) })
+    .then(res => res.json())
+    .then(json => {
+      wasMsgSent = true;
+      for (let key in json) {
+        stream.write(`${key}: ${JSON.stringify(json[key], null, 2)}\n`);
+      }
+      stream.write('\n\n');
+    })
+    .catch(err => {
+      console.error(`MsgModule ${err}`);
+    });
+
+  return wasMsgSent;
+}
 
 exports.send = msgModule;
