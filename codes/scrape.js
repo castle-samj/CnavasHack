@@ -20,7 +20,17 @@ const scrape = async (url, logic, isAuthRequired, auth, checkFailedLogin) => {
     (req.resourceType() == 'font' || req.resourceType() == 'stylesheet' || req.resourceType() == 'image') ? req.abort() : req.continue()
   });
 
-  await page.goto(url)
+  let failed;
+
+  await page.goto(url,{timeout: 3000}).catch((err)=>{
+    failed = true;
+    console.log(err.toString());
+  });
+
+  if(failed){
+    browser.close()
+    return `Failed to reach ${url}`
+  }
 
   if (isAuthRequired) {
     const tags = Object.keys(auth);
@@ -38,16 +48,23 @@ const scrape = async (url, logic, isAuthRequired, auth, checkFailedLogin) => {
         return `Login Failed for ${url}`
       }
     }
+    await page.waitForFunction(address => window.location.href === address, {timeout: 3000}, url).catch( (err) => {
+      console.log(err.toString())
+      failed = true
+      });
+  
+    if(failed){
+      browser.close()
+      return `Failed to reach ${url}`
+    }
   }
-
-  await page.waitForFunction(address => window.location.href === address, {}, url);
 
   if (typeof logic === 'function') {
     await page.exposeFunction("myFunc", logic);
     await page.evaluate(() => myFunc());
   }
 
-  const status = await page.evaluate((address) => fetch(address).then(res => res.status), url);
+  const status = await page.evaluate((address) => fetch(address).then(res => res.status), url).catch(err => err.toString());
   browser.close()
   return status
 };
