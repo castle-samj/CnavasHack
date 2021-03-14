@@ -46,7 +46,6 @@ const scrape = async (url, logic, isAuthRequired, auth, checkFailedLogin) => {
       await page.waitForTimeout(2000);
       const currentUrl = await page.evaluate(() => window.location.href);
       if (currentUrl != url) {
-        console.log(`url during login check: ${currentUrl}`);
         browser.close();
         return `Login Failed for ${url}`
       }

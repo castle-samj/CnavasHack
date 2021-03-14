@@ -1,8 +1,9 @@
 
 /**
  * Pings an ip address or domain. Requires sudo.
+ * @async
  * @param {string} ip - Domain name or ip address to ping.
- * @returns {Promise<string>}  Result of the ping.
+ * @returns {Promise<string>}  Number of packets received.
  */
 const ping = async (ip) => {
   const childProcess = require("child_process");
@@ -27,7 +28,7 @@ const ping = async (ip) => {
 
   await execute(`ping -c 2 ${ip} | grep received`)
     .then( res => {
-      result = res;
+      result = res.split(' ')[3];
     })
     .catch(err => result = err.toString());
 
