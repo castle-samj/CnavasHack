@@ -1,0 +1,33 @@
+{
+  "name": "downage",
+  "version": "1.0.0",
+  "description": "An app to check if a domain is down/unreachable.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/absolut-ly/CnavasHack.git"
+  },
+  "keywords": [
+    "down",
+    "https",
+    "domains"
+  ],
+  "author": "John Sfara <jsfara@pm.me> (https://github.com/wingedthing)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/absolut-ly/CnavasHack/issues"
+  },
+  "homepage": "https://github.com/absolut-ly/CnavasHack#readme",
+  "dependencies": {
+    "abort-controller": "^3.0.0",
+    "child_process": "^1.0.2",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
+    "fs": "^0.0.1-security",
+    "node-fetch": "^2.6.1",
+    "puppeteer": "^8.0.0"
+  }
+}
