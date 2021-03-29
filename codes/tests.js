@@ -42,9 +42,9 @@ const assertArraysEqual = (actual, expected, testName) => {
 }
 
 (async () => {
-  const scrapeResult = await test.scrape('https://learn.vccs/edu/', null, true, { 'username1': 'username here', 'password': 'password here'}, true);
+  const scrapeResult = await test.scrape('https://learn.vccs.edu/', null, true, { 'username1': 'username here', 'password': 'password here'}, true);
   const msgResult = await test.msgModule('webhook url', 'Hello World', 'test.js');
-  const pingResult = await test.ping('https://learn.vccs.edu');
+  const pingResult = await test.ping('learn.vccs.edu');
 
   assertArraysEqual([scrapeResult, msgResult, pingResult], [200, true, '2'], 'Tests');
 })();
