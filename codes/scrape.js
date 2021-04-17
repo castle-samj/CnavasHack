@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 /**
  * Opens a headless browser, navigates to url, and fetches http status code from domain. 
  * @async
@@ -10,6 +10,12 @@
  * @returns {number|string} The http status code from domain of url passed in | Failed login msg. 
  */
 const scrape = async (url, logic, isAuthRequired, auth, checkFailedLogin) => {
+  const results = {
+    error: undefined,
+    status: undefined,
+    logicResults: undefined
+  }
+
   const puppeteer = require('puppeteer');
   const browser = await puppeteer.launch({
     headless: true,
@@ -31,7 +37,8 @@ const scrape = async (url, logic, isAuthRequired, auth, checkFailedLogin) => {
 
   if(failed){
     browser.close()
-    return `Failed to reach ${url}`
+    results.error = `Failed to reach ${url}`;
+    return results;
   }
 
   if (isAuthRequired) {
@@ -47,9 +54,11 @@ const scrape = async (url, logic, isAuthRequired, auth, checkFailedLogin) => {
       const currentUrl = await page.evaluate(() => window.location.href);
       if (currentUrl != url) {
         browser.close();
-        return `Login Failed for ${url}`
+        results.error = `Login Failed for ${url}`;
+        return results;
       }
     }
+
     await page.waitForFunction(address => window.location.href === address, {timeout: 3000}, url).catch( (err) => {
       console.log(err.toString())
       failed = true
@@ -57,18 +66,19 @@ const scrape = async (url, logic, isAuthRequired, auth, checkFailedLogin) => {
   
     if(failed){
       browser.close()
-      return `Failed to reach ${url}`
+      results.error = `Failed to reach ${url}`;
+      return results;
     }
   }
 
   if (typeof logic === 'function') {
-    await page.exposeFunction("myFunc", logic);
-    await page.evaluate(() => myFunc());
+    await page.evaluate(logic).then(val => results.logicResults = val);
   }
 
-  const status = await page.evaluate((address) => fetch(address).then(res => res.status), url).catch(err => err.toString());
+  const statusCode = await page.evaluate((address) => fetch(address).then(res => res.status), url).catch(err => err.toString());
   browser.close()
-  return status
+  results.status = statusCode;
+  return results
 };
 
 exports.scrape = scrape;
